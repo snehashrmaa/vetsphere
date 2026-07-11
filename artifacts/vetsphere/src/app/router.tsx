@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
 import LearnPage from '../pages/LearnPage';
+import SubjectDetailPage from '../pages/SubjectDetailPage';
 import PracticePage from '../pages/PracticePage';
 import ClinicPage from '../pages/ClinicPage';
 import AIPage from '../pages/AIPage';
@@ -30,6 +31,7 @@ export function AppRouter() {
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/learn" element={<LearnPage />} />
+        <Route path="/learn/:subjectId" element={<SubjectDetailPage />} />
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/clinic" element={<ClinicPage />} />
         <Route path="/ai" element={<AIPage />} />
