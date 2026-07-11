@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "VetSphere"
+version = "1.0.0"
+id = "artifacts/vetsphere"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19351
+
+[services.development]
+run = "pnpm --filter @workspace/vetsphere run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/vetsphere", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/vetsphere/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19351"
+BASE_PATH = "/"
