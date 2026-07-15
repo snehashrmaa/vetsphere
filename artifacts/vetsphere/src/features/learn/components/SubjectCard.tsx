@@ -7,8 +7,7 @@ import {
   Beef, GraduationCap, Dna,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Subject } from '@/types';
-import { SUBJECT_COLORS } from '@/lib/learnMockData';
+import { type Subject, SUBJECT_COLORS } from '@/data/subjects';
 
 interface SubjectCardProps {
   subject: Subject;
@@ -49,11 +48,11 @@ function ProgressRing() {
 }
 
 export default function SubjectCard({ subject }: SubjectCardProps) {
-  const color = SUBJECT_COLORS[subject.colorKey as keyof typeof SUBJECT_COLORS] ?? SUBJECT_COLORS.blue;
+  const color = SUBJECT_COLORS[subject.color] ?? SUBJECT_COLORS.blue;
   const Icon = ICON_MAP[subject.icon] ?? Stethoscope;
 
   return (
-    <Link to={`/learn/${subject.id}`} className="block">
+    <Link to={`/learn/${subject.slug}`} className="block">
       <motion.div
         whileHover={{ y: -4, scale: 1.02 }}
         whileTap={{ scale: 0.97 }}
@@ -79,13 +78,15 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
         {/* Card body */}
         <div className="p-4 flex flex-col gap-3">
           <h3 className="font-heading font-semibold text-sm text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
-            {subject.title}
+            {subject.name}
           </h3>
           <div className="flex items-center justify-between">
             <ProgressRing />
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border border-white/5 bg-white/5 text-muted-foreground">
-              Coming Soon
-            </span>
+            {subject.comingSoon && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border border-white/5 bg-white/5 text-muted-foreground">
+                Coming Soon
+              </span>
+            )}
           </div>
         </div>
 

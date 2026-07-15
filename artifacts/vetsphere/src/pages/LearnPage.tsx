@@ -3,7 +3,7 @@ import { SlidersHorizontal } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 import Button from '@/components/Button';
 import SubjectCard from '@/features/learn/components/SubjectCard';
-import { subjects } from '@/lib/learnMockData';
+import { subjects } from '@/data/subjects';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

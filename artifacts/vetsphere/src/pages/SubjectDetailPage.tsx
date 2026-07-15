@@ -11,36 +11,39 @@ import {
 import { cn } from '@/lib/utils';
 import GlassCard from '@/components/GlassCard';
 import Button from '@/components/Button';
-import { subjects, SUBJECT_COLORS } from '@/lib/learnMockData';
+import { getSubjectBySlug, SUBJECT_COLORS } from '@/data/subjects';
 
-// ─── Icon map ────────────────────────────────────────────────────────────────
+// ─── Icon map ─────────────────────────────────────────────────────────────────
 const ICON_MAP: Record<string, ElementType> = {
   Bone, HeartPulse, FlaskConical, Microscope, Bug, Zap,
   Pill, Stethoscope, Scissors, Baby, ShieldCheck, Leaf,
   Beef, GraduationCap, Dna,
 };
 
-// ─── Tabs ─────────────────────────────────────────────────────────────────────
+// ─── Tab definitions ──────────────────────────────────────────────────────────
 const TABS = [
-  { id: 'overview',  label: 'Overview',        icon: BookOpen,    title: 'No Content Yet',      desc: 'Chapters and lessons for this subject will be available in a future update.' },
-  { id: 'notes',     label: 'Notes',           icon: PenLine,     title: 'No Notes Yet',         desc: 'This section will be available in a future update.' },
-  { id: 'flashcards',label: 'Flashcards',      icon: LibraryBig,  title: 'No Flashcards Yet',    desc: 'This section will be available in a future update.' },
-  { id: 'mcqs',      label: 'MCQs',            icon: HelpCircle,  title: 'No Questions Yet',     desc: 'This section will be available in a future update.' },
-  { id: 'cases',     label: 'Clinical Cases',  icon: Stethoscope, title: 'No Cases Yet',         desc: 'This section will be available in a future update.' },
-  { id: 'videos',    label: 'Videos',          icon: Video,       title: 'No Videos Yet',        desc: 'This section will be available in a future update.' },
-  { id: 'downloads', label: 'Downloads',       icon: Download,    title: 'No Downloads Yet',     desc: 'This section will be available in a future update.' },
+  { id: 'overview',   label: 'Overview',       icon: BookOpen,    title: 'No Content Yet',    desc: 'Chapters and lessons for this subject will be available in a future update.' },
+  { id: 'notes',      label: 'Notes',          icon: PenLine,     title: 'No Notes Yet',       desc: 'This section will be available in a future update.' },
+  { id: 'flashcards', label: 'Flashcards',     icon: LibraryBig,  title: 'No Flashcards Yet',  desc: 'This section will be available in a future update.' },
+  { id: 'mcqs',       label: 'MCQs',           icon: HelpCircle,  title: 'No Questions Yet',   desc: 'This section will be available in a future update.' },
+  { id: 'cases',      label: 'Clinical Cases', icon: Stethoscope, title: 'No Cases Yet',        desc: 'This section will be available in a future update.' },
+  { id: 'videos',     label: 'Videos',         icon: Video,       title: 'No Videos Yet',       desc: 'This section will be available in a future update.' },
+  { id: 'downloads',  label: 'Downloads',      icon: Download,    title: 'No Downloads Yet',    desc: 'This section will be available in a future update.' },
 ] as const;
 
 type TabId = typeof TABS[number]['id'];
 
-// ─── Progress ring (0%) ───────────────────────────────────────────────────────
+// ─── Progress ring (always 0%) ────────────────────────────────────────────────
 function ProgressRing({ size = 56 }: { size?: number }) {
   const stroke = 3.5;
   const r = size / 2 - stroke;
   const circ = r * 2 * Math.PI;
 
   return (
-    <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
+    <div
+      className="relative flex items-center justify-center shrink-0"
+      style={{ width: size, height: size }}
+    >
       <svg width={size} height={size} className="-rotate-90">
         <circle cx={size / 2} cy={size / 2} r={r}
           fill="transparent" stroke="currentColor" strokeWidth={stroke}
@@ -60,7 +63,11 @@ function ProgressRing({ size = 56 }: { size?: number }) {
 }
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
-function EmptyState({ icon: Icon, title, description }: { icon: ElementType; title: string; description: string }) {
+function EmptyState({ icon: Icon, title, description }: {
+  icon: ElementType;
+  title: string;
+  description: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -78,30 +85,42 @@ function EmptyState({ icon: Icon, title, description }: { icon: ElementType; tit
   );
 }
 
+// ─── Subject Not Found ────────────────────────────────────────────────────────
+function SubjectNotFound() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+      className="flex flex-col items-center justify-center min-h-[60vh] text-center"
+    >
+      <div className="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mb-5">
+        <HelpCircle className="w-8 h-8" />
+      </div>
+      <h2 className="text-2xl font-bold font-heading mb-2">Subject Not Found</h2>
+      <p className="text-muted-foreground mb-6 max-w-sm">
+        The subject you're looking for doesn't exist. Check the URL or browse all subjects below.
+      </p>
+      <Link to="/learn">
+        <Button variant="primary">Browse Subjects</Button>
+      </Link>
+    </motion.div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function SubjectDetailPage() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 
-  const subject = subjects.find(s => s.id === subjectId);
+  // Look up by slug — the route param is the subject's URL slug
+  const subject = getSubjectBySlug(subjectId ?? '');
 
-  // 404 state
   if (!subject) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <div className="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mb-5">
-          <HelpCircle className="w-8 h-8" />
-        </div>
-        <h2 className="text-2xl font-bold font-heading mb-2">Subject Not Found</h2>
-        <p className="text-muted-foreground mb-6 max-w-sm">The subject you're looking for doesn't exist.</p>
-        <Link to="/learn">
-          <Button variant="primary">Back to Learn</Button>
-        </Link>
-      </div>
-    );
+    return <SubjectNotFound />;
   }
 
-  const color = SUBJECT_COLORS[subject.colorKey as keyof typeof SUBJECT_COLORS] ?? SUBJECT_COLORS.blue;
+  const color = SUBJECT_COLORS[subject.color] ?? SUBJECT_COLORS.blue;
   const Icon = ICON_MAP[subject.icon] ?? Stethoscope;
   const activeTabData = TABS.find(t => t.id === activeTab)!;
 
@@ -121,7 +140,7 @@ export default function SubjectDetailPage() {
         Back to Learn
       </Link>
 
-      {/* ── Subject header card ────────────────────────────────────────── */}
+      {/* ── Subject header card ───────────────────────────────────────────── */}
       <GlassCard className="overflow-hidden">
         {/* Gradient banner */}
         <div className={cn('h-28 bg-gradient-to-br', color.from, color.to)} />
@@ -153,11 +172,13 @@ export default function SubjectDetailPage() {
               className="flex-1 min-w-0 pt-2 sm:pt-0"
             >
               <h1 className="text-2xl md:text-3xl font-bold font-heading text-foreground tracking-tight mb-2">
-                {subject.title}
+                {subject.name}
               </h1>
-              <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border border-white/5 bg-white/5 text-muted-foreground">
-                Coming Soon
-              </span>
+              {subject.comingSoon && (
+                <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border border-white/5 bg-white/5 text-muted-foreground">
+                  Coming Soon
+                </span>
+              )}
             </motion.div>
 
             {/* Progress ring */}
@@ -177,7 +198,7 @@ export default function SubjectDetailPage() {
           </div>
         </div>
 
-        {/* ── Tab bar ──────────────────────────────────────────────────── */}
+        {/* ── Tab bar ──────────────────────────────────────────────────────── */}
         <div className="border-t border-white/5 px-6 md:px-8 flex overflow-x-auto scrollbar-hide gap-1">
           {TABS.map((tab) => {
             const TabIcon = tab.icon;
@@ -206,7 +227,7 @@ export default function SubjectDetailPage() {
         </div>
       </GlassCard>
 
-      {/* ── Tab content ──────────────────────────────────────────────────── */}
+      {/* ── Tab content ──────────────────────────────────────────────────────── */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
