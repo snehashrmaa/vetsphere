@@ -1,12 +1,11 @@
-import React from 'react';
+import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Flame, CheckCircle, Target, Clock, MessageSquare, Search, Calendar, ChevronRight, ClipboardList, Stethoscope, Sparkles } from 'lucide-react';
+import { Flame, CheckCircle, Target, Clock, ClipboardList, Stethoscope, Sparkles, Calendar, ChevronRight, BookOpen, Users } from 'lucide-react';
 import StatCard from '@/components/StatCard';
-import SubjectCard from '@/components/SubjectCard';
 import GlassCard from '@/components/GlassCard';
 import Button from '@/components/Button';
-import { currentUser, courses, todayChallenge, researchPapers, communityPosts } from '@/lib/mockData';
+import { currentUser, todayChallenge } from '@/lib/mockData';
 import { cn } from '@/lib/utils';
 
 const containerVariants: Variants = {
@@ -23,8 +22,8 @@ const itemVariants: Variants = {
 };
 
 export default function DashboardPage() {
-  const [selectedAnswer, setSelectedAnswer] = React.useState<number | null>(null);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChallengeSubmit = () => {
     if (selectedAnswer !== null) {
@@ -32,12 +31,12 @@ export default function DashboardPage() {
     }
   };
 
-  const currentDate = new Date().toLocaleDateString('en-US', { 
-    weekday: 'long', month: 'long', day: 'numeric' 
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric'
   });
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-8"
       variants={containerVariants}
       initial="hidden"
@@ -60,37 +59,35 @@ export default function DashboardPage() {
 
       {/* Stats Row */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          icon={<Flame className="text-orange-500" />} 
-          label="Study Streak" 
-          value="14 Days" 
+        <StatCard
+          icon={<Flame className="text-orange-500" />}
+          label="Study Streak"
+          value="14 Days"
           className="border-orange-500/20"
         />
-        <StatCard 
-          icon={<CheckCircle className="text-emerald-500" />} 
-          label="Courses Completed" 
-          value="8" 
-          trend={12}
+        <StatCard
+          icon={<CheckCircle className="text-emerald-500" />}
+          label="Courses Completed"
+          value="0"
         />
-        <StatCard 
-          icon={<Target className="text-blue-500" />} 
-          label="Practice Score" 
-          value="87%" 
-          trend={5}
+        <StatCard
+          icon={<Target className="text-blue-500" />}
+          label="Practice Score"
+          value="—"
         />
-        <StatCard 
-          icon={<Clock className="text-purple-500" />} 
-          label="Study Hours" 
-          value="124h" 
+        <StatCard
+          icon={<Clock className="text-purple-500" />}
+          label="Study Hours"
+          value="0h"
         />
       </motion.div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* Left Column (2/3 width) */}
         <div className="lg:col-span-2 space-y-8">
-          
+
           {/* Continue Learning */}
           <motion.div variants={itemVariants}>
             <div className="flex items-center justify-between mb-4">
@@ -99,13 +96,15 @@ export default function DashboardPage() {
                 View All <ChevronRight size={16} />
               </Link>
             </div>
-            
-            <div className="flex overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 gap-4 snap-x snap-mandatory scrollbar-hide">
-              {courses.slice(0, 3).map((course) => (
-                <div key={course.id} className="snap-start shrink-0 w-[280px]">
-                  <SubjectCard {...course} />
-                </div>
-              ))}
+            <div className="flex flex-col items-center justify-center py-14 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
+              <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                <BookOpen className="w-7 h-7 text-muted-foreground opacity-50" />
+              </div>
+              <h3 className="text-base font-heading font-medium text-foreground mb-1">No Active Courses</h3>
+              <p className="text-sm text-muted-foreground max-w-xs mb-4">Your in-progress subjects will appear here. Head to the Learn hub to get started.</p>
+              <Link to="/learn">
+                <Button variant="outline" size="sm">Browse Subjects</Button>
+              </Link>
             </div>
           </motion.div>
 
@@ -116,11 +115,11 @@ export default function DashboardPage() {
             </h2>
             <GlassCard className="p-6 border-orange-500/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-              
+
               <h3 className="text-lg font-medium text-foreground mb-6 relative z-10 leading-relaxed">
                 {todayChallenge.question}
               </h3>
-              
+
               <div className="space-y-3 mb-6 relative z-10">
                 {todayChallenge.options.map((option, index) => {
                   let stateClass = "border-white/10 hover:border-primary/50 bg-white/5";
@@ -153,8 +152,8 @@ export default function DashboardPage() {
               </div>
 
               {!isSubmitted ? (
-                <Button 
-                  disabled={selectedAnswer === null} 
+                <Button
+                  disabled={selectedAnswer === null}
                   onClick={handleChallengeSubmit}
                   className="w-full sm:w-auto"
                 >
@@ -163,12 +162,12 @@ export default function DashboardPage() {
               ) : (
                 <div className={cn(
                   "p-4 rounded-xl text-sm font-medium animate-in fade-in slide-in-from-bottom-2",
-                  selectedAnswer === todayChallenge.correctOptionIndex 
-                    ? "bg-emerald-500/10 text-emerald-400" 
+                  selectedAnswer === todayChallenge.correctOptionIndex
+                    ? "bg-emerald-500/10 text-emerald-400"
                     : "bg-destructive/10 text-destructive"
                 )}>
-                  {selectedAnswer === todayChallenge.correctOptionIndex 
-                    ? "Correct! +10 XP added to your daily goal." 
+                  {selectedAnswer === todayChallenge.correctOptionIndex
+                    ? "Correct! +10 XP added to your daily goal."
                     : "Incorrect. The correct answer is 0.2 mg/kg for initial dose, then 0.1 mg/kg maintenance."}
                 </div>
               )}
@@ -178,16 +177,16 @@ export default function DashboardPage() {
 
         {/* Right Column (1/3 width) */}
         <div className="space-y-8">
-          
+
           {/* Quick Actions */}
           <motion.div variants={itemVariants}>
             <h2 className="text-xl font-semibold font-heading mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: ClipboardList, label: 'New Quiz', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-                { icon: Stethoscope, label: 'Case Study', color: 'text-rose-400', bg: 'bg-rose-500/10' },
-                { icon: Sparkles, label: 'AI Chat', color: 'text-purple-400', bg: 'bg-purple-500/10' },
-                { icon: Calendar, label: 'Schedule', color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+                { icon: ClipboardList, label: 'New Quiz',   color: 'text-blue-400',    bg: 'bg-blue-500/10' },
+                { icon: Stethoscope,   label: 'Case Study', color: 'text-rose-400',    bg: 'bg-rose-500/10' },
+                { icon: Sparkles,      label: 'AI Chat',    color: 'text-purple-400',  bg: 'bg-purple-500/10' },
+                { icon: Calendar,      label: 'Schedule',   color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
               ].map((action, i) => (
                 <Link key={i} to="#">
                   <GlassCard hoverEffect className="p-4 flex flex-col items-center justify-center text-center gap-3 h-full group">
@@ -201,32 +200,18 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* Latest Community */}
+          {/* Community Feed */}
           <motion.div variants={itemVariants}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold font-heading">Community Feed</h2>
               <Link to="/community" className="text-sm text-primary hover:underline">View</Link>
             </div>
-            <GlassCard className="divide-y divide-white/5">
-              {communityPosts.map((post) => (
-                <div key={post.id} className="p-4 hover:bg-white/5 transition-colors">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs font-bold">
-                      {post.authorName.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground leading-none">{post.authorName}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{post.timestamp}</div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{post.content}</p>
-                  <div className="flex gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Flame size={12} /> {post.likes}</span>
-                    <span className="flex items-center gap-1"><MessageSquare size={12} /> {post.comments}</span>
-                  </div>
-                </div>
-              ))}
-            </GlassCard>
+            <div className="flex flex-col items-center justify-center py-10 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
+                <Users className="w-6 h-6 text-muted-foreground opacity-50" />
+              </div>
+              <p className="text-sm text-muted-foreground">No posts yet. Be the first to share.</p>
+            </div>
           </motion.div>
 
         </div>

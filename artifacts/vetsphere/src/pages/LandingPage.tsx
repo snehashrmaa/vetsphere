@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useInView, Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { PlayCircle, Sparkles, Stethoscope, BookOpen, PawPrint, ClipboardList, FlaskConical, Bird, Briefcase, Github, Linkedin, Twitter } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -22,9 +22,6 @@ const fadeUp: Variants = {
 };
 
 export default function LandingPage() {
-  const statsRef = React.useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-100px" });
-
   return (
     <div className="relative">
       {/* Hero Section */}
@@ -34,14 +31,14 @@ export default function LandingPage() {
           <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
           <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s' }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[400px] bg-secondary/50 rounded-[100%] blur-[100px] rotate-45" />
-          
+
           {/* subtle noise texture */}
           <div className="absolute inset-0 opacity-[0.015] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
         </div>
 
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          
-          <motion.div 
+
+          <motion.div
             className="flex-1 text-center lg:text-left pt-10 lg:pt-0"
             variants={staggerContainer}
             initial="hidden"
@@ -51,16 +48,16 @@ export default function LandingPage() {
               <Sparkles size={16} />
               <span>VetSphere v2.0 is now live</span>
             </motion.div>
-            
+
             <motion.h1 variants={fadeUp} className="text-5xl sm:text-6xl lg:text-7xl font-bold font-heading tracking-tight leading-[1.1] mb-6 text-foreground">
               The Future of <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-400 to-accent">Veterinary Education</span>
             </motion.h1>
-            
+
             <motion.p variants={fadeUp} className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
               Master clinical cases, access premium research, and prepare for your exams with our AI-powered platform built exclusively for veterinary professionals.
             </motion.p>
-            
+
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <Link to="/dashboard" className="w-full sm:w-auto">
                 <Button variant="primary" size="lg" className="w-full sm:w-auto text-lg px-8">
@@ -74,7 +71,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Hero Visuals */}
-          <motion.div 
+          <motion.div
             className="flex-1 w-full max-w-lg lg:max-w-none relative"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -83,10 +80,10 @@ export default function LandingPage() {
             <div className="relative w-full aspect-square max-w-[500px] mx-auto">
               {/* Central element */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse" />
-              
+
               {/* Floating Cards */}
-              <motion.div 
-                animate={{ y: [0, -15, 0] }} 
+              <motion.div
+                animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute top-10 left-0 right-10"
               >
@@ -97,14 +94,14 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-sm">Clinical Case Solved</h4>
-                      <p className="text-xs text-muted-foreground">+50 XP • Canine Cardiology</p>
+                      <p className="text-xs text-muted-foreground">Canine Cardiology</p>
                     </div>
                   </div>
                 </GlassCard>
               </motion.div>
 
-              <motion.div 
-                animate={{ y: [0, 20, 0] }} 
+              <motion.div
+                animate={{ y: [0, 20, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 className="absolute bottom-20 right-0"
               >
@@ -114,22 +111,22 @@ export default function LandingPage() {
                       <BookOpen size={20} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-sm">Pharmacology Quiz</h4>
-                      <p className="text-xs text-muted-foreground">Score: 94% • Excellent!</p>
+                      <h4 className="font-semibold text-sm">Pharmacology Module</h4>
+                      <p className="text-xs text-muted-foreground">In Progress</p>
                     </div>
                   </div>
                 </GlassCard>
               </motion.div>
 
-              <motion.div 
-                animate={{ scale: [1, 1.05, 1] }} 
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-primary to-accent rounded-full p-1"
               >
                 <div className="w-full h-full bg-background rounded-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-foreground">98%</div>
-                    <div className="text-[10px] text-muted-foreground">Pass Rate</div>
+                    <PawPrint size={32} className="text-primary mx-auto" />
+                    <div className="text-[10px] text-muted-foreground mt-1">VetSphere</div>
                   </div>
                 </div>
               </motion.div>
@@ -147,93 +144,36 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <FeatureCard 
+            <FeatureCard
               icon={<Sparkles size={28} />}
               title="AI-Powered Learning"
               description="Our specialized veterinary AI helps explain complex topics, quizzes you on course material, and acts as your 24/7 study partner."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Stethoscope size={28} />}
               title="Clinical Case Studies"
               description="Practice your diagnostic skills with our massive database of real-world clinical cases across all specialties and species."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<ClipboardList size={28} />}
               title="Practice Exams"
               description="Simulate real exam conditions with timed practice tests based on NAVLE standards and board certification requirements."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<FlaskConical size={28} />}
               title="Research Database"
               description="Stay current with direct access to peer-reviewed veterinary literature, summarized for quick clinical application."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Bird size={28} />}
               title="Wildlife & Exotics"
               description="Specialized modules for non-traditional species, including avian, reptile, marine, and zoological medicine."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Briefcase size={28} />}
               title="Career Connect"
               description="Network with clinics, find externships, and discover job opportunities matched to your specific interests and location."
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section ref={statsRef} className="py-20 relative overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-primary/5" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Active Students", value: "12K+" },
-              { label: "Premium Courses", value: "500+" },
-              { label: "Expert Instructors", value: "150+" },
-              { label: "Satisfaction Rate", value: "98%" },
-            ].map((stat, i) => (
-              <motion.div 
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-4xl md:text-5xl font-bold font-heading text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section id="testimonials" className="py-24 relative bg-card/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold font-heading text-center mb-16 text-foreground">Trusted by top vet students</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "Sarah Jenkins", role: "4th Year, RVC", text: "VetSphere completely changed how I study for pathology. The 3D models and interactive cases made abstract concepts suddenly click." },
-              { name: "Dr. James Wilson", role: "Recent Graduate", text: "I credit the practice exam module for helping me pass the NAVLE on my first try. The questions perfectly mirror the real exam's difficulty." },
-              { name: "Elena Martinez", role: "3rd Year, UC Davis", text: "The AI assistant is incredible. It's like having a professor available at 2 AM when I'm stuck on a complex pharmacology pathway." }
-            ].map((t, i) => (
-              <GlassCard key={i} className="p-8 relative">
-                <div className="absolute top-6 right-6 text-6xl text-primary/10 font-serif leading-none">"</div>
-                <p className="text-muted-foreground mb-8 relative z-10 line-clamp-4 text-lg italic">"{t.text}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center font-bold text-lg border border-white/10">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-foreground">{t.name}</div>
-                    <div className="text-sm text-primary">{t.role}</div>
-                  </div>
-                </div>
-              </GlassCard>
-            ))}
           </div>
         </div>
       </section>
@@ -245,12 +185,12 @@ export default function LandingPage() {
           <GlassCard className="max-w-4xl mx-auto p-10 md:p-16 text-center bg-gradient-to-br from-card to-primary/5 border-primary/20">
             <h2 className="text-3xl md:text-5xl font-bold font-heading mb-6 text-foreground">Ready to transform your veterinary career?</h2>
             <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Join 12,000+ veterinary professionals and students who are mastering their craft with VetSphere.
+              Join veterinary professionals and students mastering their craft with VetSphere.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-              <Input 
-                placeholder="Enter your email" 
+              <Input
+                placeholder="Enter your email"
                 className="h-14 text-lg bg-background/50 border-white/20"
               />
               <Button variant="primary" size="lg" className="h-14 px-8 w-full sm:w-auto shrink-0 text-lg">
@@ -282,7 +222,7 @@ export default function LandingPage() {
                 <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Github size={20} /></a>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4 text-foreground">Platform</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -292,7 +232,7 @@ export default function LandingPage() {
                 <li><a href="#" className="hover:text-primary transition-colors">AI Assistant</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4 text-foreground">Resources</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -302,7 +242,7 @@ export default function LandingPage() {
                 <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4 text-foreground">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -313,7 +253,7 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          
+
           <div className="pt-8 border-t border-white/5 text-center text-sm text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} VetSphere Inc. All rights reserved.</p>
           </div>

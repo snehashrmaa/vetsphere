@@ -1,56 +1,51 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { ElementType } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, BookOpen, PenLine, LibraryBig, HelpCircle, Stethoscope, Video, Download, Bookmark as BookmarkIcon, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/Button';
 import GlassCard from '@/components/GlassCard';
-
-// Data imports
-import { 
-  subjects, chapters, lessons, flashcards, mcqs, 
-  clinicalCases, videos, downloads, notes, bookmarks, 
-  SUBJECT_COLORS 
-} from '@/lib/learnMockData';
-
-// Component imports
-import ChapterCard from '@/features/learn/components/ChapterCard';
-import FlashcardPreview from '@/features/learn/components/FlashcardPreview';
-import MCQCard from '@/features/learn/components/MCQCard';
-import ClinicalCaseCard from '@/features/learn/components/ClinicalCaseCard';
-import VideoCard from '@/features/learn/components/VideoCard';
-import DownloadCard from '@/features/learn/components/DownloadCard';
-import BookmarkRow from '@/features/learn/components/BookmarkRow';
-import { SubjectNote } from '@/types';
+import { subjects, SUBJECT_COLORS } from '@/lib/learnMockData';
 
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: BookOpen },
-  { id: 'notes', label: 'Notes', icon: PenLine },
+  { id: 'overview',   label: 'Overview',   icon: BookOpen },
+  { id: 'notes',      label: 'Notes',      icon: PenLine },
   { id: 'flashcards', label: 'Flashcards', icon: LibraryBig },
-  { id: 'mcqs', label: 'MCQs', icon: HelpCircle },
-  { id: 'cases', label: 'Cases', icon: Stethoscope },
-  { id: 'videos', label: 'Videos', icon: Video },
-  { id: 'downloads', label: 'Downloads', icon: Download },
-  { id: 'bookmarks', label: 'Bookmarks', icon: BookmarkIcon },
+  { id: 'mcqs',       label: 'MCQs',       icon: HelpCircle },
+  { id: 'cases',      label: 'Cases',      icon: Stethoscope },
+  { id: 'videos',     label: 'Videos',     icon: Video },
+  { id: 'downloads',  label: 'Downloads',  icon: Download },
+  { id: 'bookmarks',  label: 'Bookmarks',  icon: BookmarkIcon },
 ] as const;
 
 type TabId = typeof tabs[number]['id'];
 
+function EmptyState({ icon: Icon, title, description, actionLabel }: {
+  icon: ElementType;
+  title: string;
+  description: string;
+  actionLabel?: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
+      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+        <Icon className="w-8 h-8 text-muted-foreground opacity-50" />
+      </div>
+      <h3 className="text-xl font-heading font-medium text-foreground mb-2">{title}</h3>
+      <p className="text-muted-foreground max-w-sm mb-6">{description}</p>
+      {actionLabel && (
+        <Button variant="outline" icon={<Plus className="w-4 h-4" />}>{actionLabel}</Button>
+      )}
+    </div>
+  );
+}
+
 export default function SubjectDetailPage() {
   const { subjectId } = useParams();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
-  const [flashcardIndex, setFlashcardIndex] = useState(0);
 
-  // Find subject and associated data
   const subject = subjects.find(s => s.id === subjectId);
-  const subjectChapters = chapters.filter(c => c.subjectId === subjectId).sort((a, b) => a.order - b.order);
-  const subjectFlashcards = flashcards.filter(f => f.subjectId === subjectId);
-  const subjectMCQs = mcqs.filter(m => m.subjectId === subjectId);
-  const subjectCases = clinicalCases.filter(c => c.subjectId === subjectId);
-  const subjectVideos = videos.filter(v => v.subjectId === subjectId);
-  const subjectDownloads = downloads.filter(d => d.subjectId === subjectId);
-  const subjectNotes = notes.filter(n => n.subjectId === subjectId);
-  const subjectBookmarks = bookmarks.filter(b => b.subjectId === subjectId);
 
   if (!subject) {
     return (
@@ -69,7 +64,6 @@ export default function SubjectDetailPage() {
 
   const color = SUBJECT_COLORS[subject.colorKey as keyof typeof SUBJECT_COLORS] || SUBJECT_COLORS.blue;
 
-  // SVG Progress Ring calculations
   const radius = 28;
   const stroke = 4;
   const normalizedRadius = radius - stroke * 2;
@@ -92,7 +86,7 @@ export default function SubjectDetailPage() {
             <div className={cn("w-24 h-24 rounded-2xl flex items-center justify-center shrink-0 border-4 border-background shadow-xl bg-gradient-to-br", color.from, color.to, color.text)}>
               <BookOpen className="w-10 h-10" />
             </div>
-            
+
             <div className="flex-grow min-w-0 pt-2 md:pt-0">
               <div className="flex items-center gap-3 mb-2">
                 <span className={cn("px-2.5 py-0.5 rounded-full text-xs font-bold border", color.badge, "border-white/5")}>
@@ -146,7 +140,7 @@ export default function SubjectDetailPage() {
             </div>
           </div>
         </div>
-        
+
         {/* Tabs Navigation */}
         <div className="border-t border-white/5 px-6 md:px-10 flex overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
@@ -155,8 +149,8 @@ export default function SubjectDetailPage() {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm whitespace-nowrap transition-colors",
-                activeTab === tab.id 
-                  ? "border-primary text-primary" 
+                activeTab === tab.id
+                  ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-white/[0.02]"
               )}
             >
@@ -177,218 +171,45 @@ export default function SubjectDetailPage() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            {/* OVERVIEW TAB */}
             {activeTab === 'overview' && (
-              <div className="space-y-4">
-                {subjectChapters.length > 0 ? (
-                  subjectChapters.map((chapter, index) => {
-                    const chapterLessons = lessons.filter(l => l.chapterId === chapter.id);
-                    return (
-                      <ChapterCard 
-                        key={chapter.id} 
-                        chapter={chapter} 
-                        lessons={chapterLessons}
-                        defaultOpen={index === 0} 
-                      />
-                    );
-                  })
-                ) : (
-                  // Empty state / skeleton for subjects without detailed data
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <GlassCard key={i} className="p-5 flex items-center gap-4 opacity-50 grayscale border-dashed border-white/10">
-                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground">
-                        Ch {i + 1}
-                      </div>
-                      <div>
-                        <div className="h-5 w-48 bg-white/10 rounded mb-2" />
-                        <div className="h-3 w-32 bg-white/5 rounded" />
-                      </div>
-                    </GlassCard>
-                  ))
-                )}
-              </div>
+              <EmptyState icon={BookOpen} title="Content Coming Soon" description="Chapters and lessons for this subject will appear here once they are published." />
             )}
 
-            {/* NOTES TAB */}
             {activeTab === 'notes' && (
               <div className="space-y-4">
                 <div className="flex justify-end mb-4">
                   <Button icon={<Plus className="w-4 h-4" />} size="sm">Create Note</Button>
                 </div>
-                {subjectNotes.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {subjectNotes.map(note => (
-                      <GlassCard key={note.id} className="p-5 flex flex-col hover:bg-white/[0.02] transition-colors group border-white/5">
-                        <div className="flex justify-between items-start mb-3">
-                          <span className="px-2 py-1 rounded bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                            {note.chapterTitle}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{note.updatedAt}</span>
-                        </div>
-                        <p className="text-sm text-foreground/90 leading-relaxed mb-6 line-clamp-4">
-                          {note.content}
-                        </p>
-                        <div className="mt-auto flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="secondary" size="sm" className="w-full text-xs h-8">Edit</Button>
-                          <Button variant="ghost" size="sm" className="w-full text-xs h-8 text-rose-400 hover:text-rose-500 hover:bg-rose-500/10">Delete</Button>
-                        </div>
-                      </GlassCard>
-                    ))}
-                  </div>
-                ) : (
-                  <EmptyState icon={PenLine} title="No notes yet" description="Start documenting your learning journey. Your notes will appear here." actionLabel="Start your first note" />
-                )}
+                <EmptyState icon={PenLine} title="No Notes Yet" description="Start documenting your learning journey. Your notes will appear here." actionLabel="Start your first note" />
               </div>
             )}
 
-            {/* FLASHCARDS TAB */}
             {activeTab === 'flashcards' && (
-              <div className="space-y-6">
-                {subjectFlashcards.length > 0 ? (
-                  <>
-                    <div className="flex justify-between items-center bg-black/20 p-4 rounded-2xl border border-white/5">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
-                          {subjectFlashcards.length}
-                        </div>
-                        <div>
-                          <h3 className="font-heading font-medium">Total Cards</h3>
-                          <p className="text-xs text-muted-foreground">Ready for review</p>
-                        </div>
-                      </div>
-                      <Button>Practice All</Button>
-                    </div>
-
-                    <FlashcardPreview card={subjectFlashcards[flashcardIndex]} />
-
-                    <div className="flex justify-center items-center gap-8 mt-8">
-                      <Button 
-                        variant="secondary" 
-                        onClick={() => setFlashcardIndex(prev => Math.max(0, prev - 1))}
-                        disabled={flashcardIndex === 0}
-                      >
-                        Previous
-                      </Button>
-                      <span className="text-sm font-medium font-heading">
-                        {flashcardIndex + 1} <span className="text-muted-foreground">/ {subjectFlashcards.length}</span>
-                      </span>
-                      <Button 
-                        variant="secondary" 
-                        onClick={() => setFlashcardIndex(prev => Math.min(subjectFlashcards.length - 1, prev + 1))}
-                        disabled={flashcardIndex === subjectFlashcards.length - 1}
-                      >
-                        Next
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <EmptyState icon={LibraryBig} title="No flashcards available" description="This subject doesn't have any flashcards yet." />
-                )}
-              </div>
+              <EmptyState icon={LibraryBig} title="No Flashcards Yet" description="Flashcards for this subject will appear here once they are added." />
             )}
 
-            {/* MCQS TAB */}
             {activeTab === 'mcqs' && (
-              <div className="space-y-6">
-                {subjectMCQs.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-3 gap-4 mb-8">
-                      <div className="bg-black/20 border border-white/5 rounded-2xl p-4 text-center">
-                        <div className="text-2xl font-bold text-foreground">{subjectMCQs.length}</div>
-                        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">Total</div>
-                      </div>
-                      <div className="bg-black/20 border border-white/5 rounded-2xl p-4 text-center">
-                        <div className="text-2xl font-bold text-primary">0</div>
-                        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">Answered</div>
-                      </div>
-                      <div className="bg-black/20 border border-white/5 rounded-2xl p-4 text-center">
-                        <div className="text-2xl font-bold text-emerald-500">0%</div>
-                        <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">Accuracy</div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      {subjectMCQs.map((mcq) => (
-                        <MCQCard key={mcq.id} question={mcq} />
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <EmptyState icon={HelpCircle} title="No MCQs available" description="Check back later for practice questions." />
-                )}
-              </div>
+              <EmptyState icon={HelpCircle} title="No Questions Yet" description="Practice questions for this subject are coming soon." />
             )}
 
-            {/* CASES TAB */}
             {activeTab === 'cases' && (
-              <div>
-                {subjectCases.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {subjectCases.map(c => <ClinicalCaseCard key={c.id} clinicalCase={c} />)}
-                  </div>
-                ) : (
-                  <EmptyState icon={Stethoscope} title="No clinical cases" description="There are no case studies available for this subject yet." />
-                )}
-              </div>
+              <EmptyState icon={Stethoscope} title="No Clinical Cases Yet" description="Case studies for this subject will appear here once they are published." />
             )}
 
-            {/* VIDEOS TAB */}
             {activeTab === 'videos' && (
-              <div>
-                {subjectVideos.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {subjectVideos.map(v => <VideoCard key={v.id} video={v} />)}
-                  </div>
-                ) : (
-                  <EmptyState icon={Video} title="No videos available" description="Video lectures for this subject are currently in production." />
-                )}
-              </div>
+              <EmptyState icon={Video} title="No Videos Yet" description="Video lectures for this subject are currently in production." />
             )}
 
-            {/* DOWNLOADS TAB */}
             {activeTab === 'downloads' && (
-              <div>
-                {subjectDownloads.length > 0 ? (
-                  <div className="space-y-3">
-                    {subjectDownloads.map(d => <DownloadCard key={d.id} item={d} />)}
-                  </div>
-                ) : (
-                  <EmptyState icon={Download} title="No downloads" description="There are no supplementary materials available for download." />
-                )}
-              </div>
+              <EmptyState icon={Download} title="No Downloads Yet" description="Supplementary materials for this subject will be available here." />
             )}
 
-            {/* BOOKMARKS TAB */}
             {activeTab === 'bookmarks' && (
-              <div>
-                {subjectBookmarks.length > 0 ? (
-                  <div className="space-y-2">
-                    {subjectBookmarks.map(b => <BookmarkRow key={b.id} bookmark={b} />)}
-                  </div>
-                ) : (
-                  <EmptyState icon={BookmarkIcon} title="No bookmarks" description="Items you bookmark across this subject will appear here for quick access." />
-                )}
-              </div>
+              <EmptyState icon={BookmarkIcon} title="No Bookmarks Yet" description="Items you bookmark across this subject will appear here for quick access." />
             )}
-
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
-  );
-}
-
-// Helper Empty State component
-function EmptyState({ icon: Icon, title, description, actionLabel }: { icon: any, title: string, description: string, actionLabel?: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
-      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-        <Icon className="w-8 h-8 text-muted-foreground opacity-50" />
-      </div>
-      <h3 className="text-xl font-heading font-medium text-foreground mb-2">{title}</h3>
-      <p className="text-muted-foreground max-w-sm mb-6">{description}</p>
-      {actionLabel && (
-        <Button variant="outline" icon={<Plus className="w-4 h-4" />}>{actionLabel}</Button>
-      )}
     </div>
   );
 }

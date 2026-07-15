@@ -1,9 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Stethoscope, Activity, FileText } from 'lucide-react';
-import GlassCard from '@/components/GlassCard';
+import { Stethoscope } from 'lucide-react';
+import SearchBar from '@/components/SearchBar';
 import Button from '@/components/Button';
-import { clinicalCases } from '@/lib/mockData';
 
 export default function ClinicPage() {
   return (
@@ -15,30 +13,17 @@ export default function ClinicPage() {
           </h1>
           <p className="text-muted-foreground">Real-world scenarios to hone your diagnostic skills.</p>
         </div>
+        <div className="flex gap-3 w-full md:w-auto">
+          <SearchBar placeholder="Search cases..." containerClassName="flex-1 md:w-72" />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {clinicalCases.map((c, i) => (
-          <motion.div key={c.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-            <GlassCard hoverEffect className="p-6 h-full flex flex-col group relative overflow-hidden">
-              {/* decorative side bar */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-accent opacity-50 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider">{c.specialty}</span>
-                <span className="px-2 py-0.5 rounded text-xs bg-white/5 border border-white/10 text-muted-foreground">{c.difficulty}</span>
-              </div>
-              
-              <h3 className="text-xl font-bold font-heading mb-3 text-foreground leading-tight group-hover:text-primary transition-colors">{c.title}</h3>
-              <p className="text-muted-foreground text-sm mb-6 flex-grow">{c.description}</p>
-              
-              <div className="flex gap-3 mt-auto">
-                <Button variant="primary" className="w-full flex-1">Open Case</Button>
-                <Button variant="outline" size="icon" className="shrink-0"><FileText size={18} /></Button>
-              </div>
-            </GlassCard>
-          </motion.div>
-        ))}
+      <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
+        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+          <Stethoscope className="w-8 h-8 text-muted-foreground opacity-50" />
+        </div>
+        <h3 className="text-xl font-heading font-medium text-foreground mb-2">No Cases Yet</h3>
+        <p className="text-muted-foreground max-w-sm">Clinical case studies will appear here once they are published.</p>
       </div>
     </motion.div>
   );
