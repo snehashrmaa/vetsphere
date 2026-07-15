@@ -7,6 +7,7 @@ import DashboardPage from '../pages/DashboardPage';
 import LearnPage from '../pages/LearnPage';
 import SubjectDetailPage from '../pages/SubjectDetailPage';
 import PracticePage from '../pages/PracticePage';
+import PracticeDetailPage from '../pages/PracticeDetailPage';
 import ClinicPage from '../pages/ClinicPage';
 import AIPage from '../pages/AIPage';
 import CommunityPage from '../pages/CommunityPage';
@@ -33,6 +34,7 @@ export function AppRouter() {
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/learn/:subjectId" element={<SubjectDetailPage />} />
         <Route path="/practice" element={<PracticePage />} />
+        <Route path="/practice/:categorySlug" element={<PracticeDetailPage />} />
         <Route path="/clinic" element={<ClinicPage />} />
         <Route path="/ai" element={<AIPage />} />
         <Route path="/community" element={<CommunityPage />} />
