@@ -1,30 +1,58 @@
-import { motion } from 'framer-motion';
-import { Stethoscope } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 import SearchBar from '@/components/SearchBar';
-import Button from '@/components/Button';
+import ClinicToolCard from '@/features/clinic/components/ClinicToolCard';
+import { clinicTools } from '@/data/clinicTools';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 280, damping: 24 },
+  },
+};
 
 export default function ClinicPage() {
   return (
-    <motion.div className="space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold font-heading text-foreground tracking-tight mb-2 flex items-center gap-3">
-            <Stethoscope className="text-primary" /> Clinical Cases
-          </h1>
-          <p className="text-muted-foreground">Real-world scenarios to hone your diagnostic skills.</p>
-        </div>
-        <div className="flex gap-3 w-full md:w-auto">
-          <SearchBar placeholder="Search cases..." containerClassName="flex-1 md:w-72" />
-        </div>
-      </div>
+    <div className="space-y-8 pb-12">
+      {/* Page header */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+      >
+        <h1 className="text-3xl md:text-4xl font-bold font-heading text-foreground tracking-tight">
+          Clinic
+        </h1>
 
-      <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-black/10 rounded-2xl border border-dashed border-white/10">
-        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-          <Stethoscope className="w-8 h-8 text-muted-foreground opacity-50" />
-        </div>
-        <h3 className="text-xl font-heading font-medium text-foreground mb-2">No Cases Yet</h3>
-        <p className="text-muted-foreground max-w-sm">Clinical case studies will appear here once they are published.</p>
-      </div>
-    </motion.div>
+        <SearchBar
+          placeholder="Search tools..."
+          containerClassName="w-full sm:w-64"
+        />
+      </motion.div>
+
+      {/* Tools grid */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5"
+      >
+        {clinicTools.map((tool) => (
+          <motion.div key={tool.id} variants={cardVariants}>
+            <ClinicToolCard tool={tool} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
   );
 }
