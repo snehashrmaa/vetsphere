@@ -12,6 +12,7 @@ import ClinicPage from '../pages/ClinicPage';
 import ClinicToolPage from '../pages/ClinicToolPage';
 import AIPage from '../pages/AIPage';
 import CommunityPage from '../pages/CommunityPage';
+import CommunitySpacePage from '../pages/CommunitySpacePage';
 import ResearchPage from '../pages/ResearchPage';
 import WildlifePage from '../pages/WildlifePage';
 import CareerPage from '../pages/CareerPage';
@@ -40,6 +41,7 @@ export function AppRouter() {
         <Route path="/clinic/:toolSlug" element={<ClinicToolPage />} />
         <Route path="/ai" element={<AIPage />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/community/:spaceSlug" element={<CommunitySpacePage />} />
         <Route path="/research" element={<ResearchPage />} />
         <Route path="/wildlife" element={<WildlifePage />} />
         <Route path="/career" element={<CareerPage />} />
