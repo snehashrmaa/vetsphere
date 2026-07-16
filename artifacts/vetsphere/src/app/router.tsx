@@ -15,7 +15,6 @@ import CommunityPage from '../pages/CommunityPage';
 import CommunitySpacePage from '../pages/CommunitySpacePage';
 import ResearchPage from '../pages/ResearchPage';
 import WildlifePage from '../pages/WildlifePage';
-import CareerPage from '../pages/CareerPage';
 import ProfilePage from '../pages/ProfilePage';
 import SettingsPage from '../pages/SettingsPage';
 import NotFoundPage from '../pages/not-found';
@@ -44,7 +43,6 @@ export function AppRouter() {
         <Route path="/community/:spaceSlug" element={<CommunitySpacePage />} />
         <Route path="/research" element={<ResearchPage />} />
         <Route path="/wildlife" element={<WildlifePage />} />
-        <Route path="/career" element={<CareerPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>

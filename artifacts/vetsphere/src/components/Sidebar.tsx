@@ -2,8 +2,8 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, BookOpen, ClipboardList, Stethoscope, 
-  Sparkles, FlaskConical, Bird, Users, Briefcase, 
+  LayoutDashboard, BookOpen, ClipboardList, Stethoscope,
+  Sparkles, FlaskConical, Bird, Users,
   UserCircle, Settings, ChevronLeft, PawPrint, LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,7 +19,6 @@ const navItems = [
   { title: 'Research', href: '/research', icon: FlaskConical },
   { title: 'Wildlife', href: '/wildlife', icon: Bird },
   { title: 'Community', href: '/community', icon: Users },
-  { title: 'Career', href: '/career', icon: Briefcase },
   { title: 'Profile', href: '/profile', icon: UserCircle },
   { title: 'Settings', href: '/settings', icon: Settings },
 ];
